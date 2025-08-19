@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popup Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .website-content {
+            max-width: 1000px;
+            width: 100%;
+            padding: 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .website-content h1 {
+            color: #6e48aa;
+            margin-bottom: 20px;
+        }
+
+        .website-content p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* Chatbot styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(to right, #6e48aa, #9d50bb);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .chatbot-button i {
+            font-size: 1.5rem;
+        }
+
+        .chat-window {
+            width: 350px;
+            height: 450px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            visibility: hidden;
+        }
+
+        .chat-window.active {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+
+        .chat-header {
+            background: linear-gradient(to right, #6e48aa, #9d50bb);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-title i {
+            font-size: 1.2rem;
+        }
+
+        .chat-controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .chat-controls button {
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.2s;
+        }
+
+        .chat-controls button:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.4;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: #e8ebf0;
+            border-bottom-left-radius: 5px;
+            color: #333;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: #6e48aa;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #eaeaea;
+            gap: 10px;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 24px;
+            outline: none;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .message-input:focus {
+            border-color: #6e48aa;
+        }
+
+        .send-button {
+            background: #6e48aa;
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .send-button:hover {
+            background: #5d3d91;
+        }
+
+        .timestamp {
+            font-size: 0.7rem;
+            margin-top: 5px;
+            opacity: 0.7;
+            text-align: right;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            background: #e8ebf0;
+            padding: 12px 16px;
+            border-radius: 18px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .typing-indicator.active {
+            display: block;
+        }
+
+        .api-status {
+            padding: 8px 15px;
+            background: #f1f3f5;
+            font-size: 0.8rem;
+            color: #495057;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #28a745;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 500px) {
+            .chat-window {
+                width: 90vw;
+                height: 70vh;
+                right: 5vw;
+                bottom: 80px;
+            }
+            
+            .chatbot-container {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .chatbot-button {
+                width: 55px;
+                height: 55px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="website-content">
+        <h1>Welcome to Our Website</h1>
+        <p>This is a sample website with a modern popup chatbot. Click the chat button in the bottom right corner to start a conversation with our AI assistant.</p>
+        <p>The chatbot is powered by OpenRouter API and can answer your questions, provide information, and assist with various tasks.</p>
+        <p>Try asking questions like "What can you help me with?" or "Tell me about your services".</p>
+    </div>
+
+    <div class="chatbot-container">
+        <div class="chat-window" id="chat-window">
+            <div class="chat-header">
+                <div class="chat-title">
+                    <i class="fas fa-robot"></i>
+                    <h2>ZAIS.ai</h2>
+                </div>
+                <div class="chat-controls">
+                    <button id="minimize-btn"><i class="fas fa-minus"></i></button>
+                    <button id="close-btn"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            
+            <div class="api-status">
+                <div class="status-indicator"></div>
+                <span>Connected to OpenRouter API</span>
+            </div>
+            
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot-message">
+                    Hello! I'm your AI assistant. How can I help you today?
+                    <div class="timestamp">Just now</div>
+                </div>
+                <div class="typing-indicator" id="typing-indicator">AI is thinking...</div>
+            </div>
+            
+            <div class="chat-input">
+                <input type="text" class="message-input" id="message-input" placeholder="Type your message here...">
+                <button class="send-button" id="send-button">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        
+        <button class="chatbot-button" id="chatbot-toggle">
+            <i class="fas fa-comment-dots"></i>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatWindow = document.getElementById('chat-window');
+            const chatMessages = document.getElementById('chat-messages');
+            const messageInput = document.getElementById('message-input');
+            const sendButton = document.getElementById('send-button');
+            const typingIndicator = document.getElementById('typing-indicator');
+            const minimizeBtn = document.getElementById('minimize-btn');
+            const closeBtn = document.getElementById('close-btn');
+            const toggleBtn = document.getElementById('chatbot-toggle');
+            
+            // API configuration
+            const API_KEY = "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";
+            const API_URL = "https://openrouter.ai/api/v1/chat/completions";
+            const MODEL = "deepseek/deepseek-r1-0528-qwen3-8b:free";
+            
+            // Toggle chat window
+            toggleBtn.addEventListener('click', function() {
+                chatWindow.classList.toggle('active');
+                if (chatWindow.classList.contains('active')) {
+                    messageInput.focus();
+                }
+            });
+            
+            // Minimize chat window
+            minimizeBtn.addEventListener('click', function() {
+                chatWindow.classList.remove('active');
+            });
+            
+            // Close chat window
+            closeBtn.addEventListener('click', function() {
+                chatWindow.classList.remove('active');
+            });
+            
+            // Add event listeners
+            sendButton.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Function to send a message
+            async function sendMessage() {
+                const message = messageInput.value.trim();
+                if (message) {
+                    addMessage(message, 'user');
+                    messageInput.value = '';
+                    
+                    // Show typing indicator
+                    typingIndicator.classList.add('active');
+                    
+                    try {
+                        // Get response from OpenRouter API
+                        const response = await fetchOpenRouterResponse(message);
+                        typingIndicator.classList.remove('active');
+                        addMessage(response, 'bot');
+                    } catch (error) {
+                        typingIndicator.classList.remove('active');
+                        addMessage("Sorry, I'm having trouble connecting to the AI service. Please try again later.", 'bot');
+                        console.error("API Error:", error);
+                    }
+                }
+            }
+            
+            // Function to call OpenRouter API
+            async function fetchOpenRouterResponse(userMessage) {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${API_KEY}`,
+                        "HTTP-Referer": window.location.href,
+                        "X-Title": "AI Chatbot",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "model": MODEL,
+                        "messages": [
+                            {
+                                "role": "user",
+                                "content": userMessage
+                            }
+                        ]
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data.choices[0].message.content;
+            }
+            
+            // Function to add a message to the chat
+            function addMessage(text, sender) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message');
+                messageElement.classList.add(sender + '-message');
+                messageElement.textContent = text;
+                
+                // Add timestamp
+                const timestamp = document.createElement('div');
+                timestamp.classList.add('timestamp');
+                timestamp.textContent = getCurrentTime();
+                messageElement.appendChild(timestamp);
+                
+                chatMessages.insertBefore(messageElement, typingIndicator);
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Function to get current time for timestamp
+            function getCurrentTime() {
+                const now = new Date();
+                return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+        });
+    </script>
+</body>
+</html>

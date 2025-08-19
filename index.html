@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Business - Home</title>
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  
+  <style>
+    /* Global Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    /* Navbar Styles */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: #111;
+      color: white;
+      position: relative;
+    }
+    
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    
+    .navbar-menu {
+      display: flex;
+      list-style: none;
+    }
+    
+    .navbar-menu > li {
+      position: relative;
+      margin-left: 1.5rem;
+    }
+    
+    .navbar-menu a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem;
+      display: block;
+    }
+    
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #111;
+      width: 200px;
+      display: none;
+      z-index: 100;
+      list-style: none;
+      padding: 0.5rem 0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    
+    .dropdown li {
+      padding: 0.5rem 1rem;
+    }
+    
+    .navbar-menu li:hover .dropdown {
+      display: block;
+    }
+    
+    /* Mobile Nav Toggle */
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    /* Hero Section */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(135deg, #ff5f5f, #fcb045);
+      color: #fff;
+      padding: 0 1rem;
+    }
+    
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      max-width: 800px;
+    }
+    
+    .hero button {
+      padding: 15px 35px;
+      border: none;
+      background: #111;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    
+    .hero button:hover {
+      background: #333;
+    }
+    
+    /* About Section */
+    .about-section {
+      padding: 5rem 1rem;
+      background: #0f0f0f;
+      color: #fff;
+      text-align: center;
+    }
+    
+    .about-section h2 {
+      font-size: 2.2rem;
+      margin-bottom: 2.5rem;
+      color: #ff5f5f;
+    }
+    
+    .about-section p {
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.8;
+      font-size: 1.2rem;
+    }
+    
+    /* Card Section */
+    .cards-section {
+      padding: 5rem 1rem;
+      background: #f9f9f9;
+      text-align: center;
+    }
+    
+    .cards-section h2 {
+      font-size: 2.2rem;
+      margin-bottom: 2.5rem;
+      color: #ff5f5f;
+    }
+    
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-8px);
+    }
+    
+    .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #111;
+    }
+    
+    .card p {
+      font-size: 1rem;
+      color: #444;
+      flex-grow: 1;
+      margin-bottom: 1rem;
+    }
+    
+    .card button {
+      margin-top: 1rem;
+      padding: 12px;
+      border: none;
+      background: #ff5f5f;
+      color: #fff;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    
+    .card button:hover {
+      background: #ff3030;
+      transform: scale(1.05);
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+      .navbar-menu {
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        right: -300px;
+        width: 300px;
+        height: 100vh;
+        background: #111;
+        padding: 2rem;
+        transition: right 0.3s ease;
+        z-index: 1000;
+      }
+      
+      .navbar-menu.active {
+        right: 0;
+      }
+      
+      .navbar-menu > li {
+        margin: 1rem 0;
+      }
+      
+      .dropdown {
+        position: static;
+        width: 100%;
+        display: none;
+        margin-top: 0.5rem;
+        box-shadow: none;
+      }
+      
+      .nav-toggle {
+        display: block;
+        z-index: 1001;
+      }
+      
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .hero p {
+        font-size: 1.1rem;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .navbar {
+        padding: 1rem;
+      }
+      
+      .navbar-brand {
+        font-size: 1.2rem;
+      }
+      
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+      
+      .hero p {
+        font-size: 1rem;
+      }
+      
+      .hero button {
+        padding: 12px 25px;
+      }
+      
+      .about-section h2,
+      .cards-section h2 {
+        font-size: 1.8rem;
+      }
+      
+      .about-section p {
+        font-size: 1rem;
+      }
+      
+      .cards-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    .zais-ai-section {
+    background: linear-gradient(90deg, #f3f6fa 60%, #e9e4f0 100%);
+    padding: 2.5rem 1rem 2rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeInZais 1s;
+  }
+  @keyframes fadeInZais {
+    from { opacity: 0; transform: translateY(-30px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+  .zais-ai-content {
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .zais-ai-robot {
+    margin-bottom: 1.2rem;
+    animation: floatRobot 2s infinite ease-in-out;
+  }
+  @keyframes floatRobot {
+    0%,100% { transform: translateY(0);}
+    50% { transform: translateY(-12px);}
+  }
+  .zais-ai-content h2 {
+    color: #6e48aa;
+    font-size: 2rem;
+    margin-bottom: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .zais-ai-content p {
+    color: #333;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+  }
+  .zais-ai-btn {
+    display: inline-block;
+    background: linear-gradient(90deg, #6e48aa 60%, #9d50bb 100%);
+    color: #fff;
+    font-size: 1.1rem;
+    padding: 14px 32px;
+    border-radius: 32px;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(110,72,170,0.12);
+    transition: background 0.2s, transform 0.2s;
+    border: none;
+    outline: none;
+  }
+  .zais-ai-btn:hover {
+    background: linear-gradient(90deg, #9d50bb 60%, #6e48aa 100%);
+    transform: scale(1.05);
+  }
+  .zais-ai-btn i {
+    margin-right: 8px;
+    font-size: 1.2em;
+    vertical-align: middle;
+  }
+  @media (max-width: 600px) {
+    .zais-ai-content h2 { font-size: 1.3rem; }
+    .zais-ai-content p { font-size: 1rem; }
+    .zais-ai-btn { font-size: 1rem; padding: 12px 18px; }
+    .zais-ai-robot svg { width: 60px; height: 60px; }
+  }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-brand">𝐙𝐎𝐓𝐀𝐂𝐓𝐘𝐒𝐎𝐍- सम्राज्य 🧃</div>
+    <button class="nav-toggle" id="navToggle">
+      <i class="fas fa-bars"></i>
+    </button>
+    <ul class="navbar-menu" id="navbarMenu">
+      <li><a href="#">XML 🤪</a>
+        <ul class="dropdown">
+          <li><a href="xml1.html">XML's 1</a></li>
+          <li><a href="xml2.html">XML's 2</a></li>
+          <li><a href="xml3.html">XML's 3</a></li>
+          <li><a href="xml4.html">XML's 4</a></li>
+          <li><a href="xml5.html">XML's 5</a></li>
+          <li><a href="xml6.html">XML's 6</a></li>
+        </ul>
+      </li>
+      
+      <li><a href="projects.html">Editing(EFX)</a></li>
+      <li><a href="pricing.html">Banning</a></li>
+      <li><a href="#">About Us </a>
+        <ul class="dropdown">
+          <li><a href="our-story.html">Our Story</a></li>
+          <li><a href="team.html">Team</a></li>
+          <li><a href="mission.html">Mission & Vision</a></li>
+        </ul>
+      </li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="signup.html">Sign-up</a></li>
+    </ul>
+  </nav>
+  
+
+  <!-- Welcome Hero Section -->
+  <section class="hero">
+    <h1>Welcome to 𝐙𝐎𝐓𝐀𝐂𝐓𝐘𝐒𝐎𝐍- सम्राज्य 🧃</h1>
+    <p>Your creative hub for Alight Motion XMLs, Editing, and Content Solutions!</p>
+    <button onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">Explore More</button>
+  </section>
+
+  <!-- About Preview Section
+  <section id="about" class="about-section">
+    <h2>About 𝐙𝐎𝐓𝐀𝐂𝐓𝐘𝐒𝐎𝐍</h2>
+    <p>
+      𝐙𝐎𝐓𝐀𝐂𝐓𝐘𝐒𝐎𝐍- सम्राज्य 🧃 is dedicated to helping creators shine with high-quality Alight Motion XMLs, expert video editing, and creative content services. We empower creators to bring their visions to life in style and ease.
+    </p>
+  </section> -->
+
+  <!-- Add this section just below the navbar in index.html -->
+<div class="zais-ai-section">
+  <div class="zais-ai-content">
+    <div class="zais-ai-robot">
+      <!-- Simple animated robot SVG -->
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+        <circle cx="40" cy="40" r="30" fill="#6e48aa">
+          <animate attributeName="r" values="28;32;28" dur="1.2s" repeatCount="indefinite"/>
+        </circle>
+        <rect x="28" y="55" width="24" height="8" rx="4" fill="#9d50bb">
+          <animate attributeName="y" values="55;58;55" dur="1.2s" repeatCount="indefinite"/>
+        </rect>
+        <ellipse cx="32" cy="38" rx="4" ry="6" fill="#fff"/>
+        <ellipse cx="48" cy="38" rx="4" ry="6" fill="#fff"/>
+        <circle cx="32" cy="38" r="2" fill="#6e48aa">
+          <animate attributeName="r" values="2;3;2" dur="1.2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="48" cy="38" r="2" fill="#6e48aa">
+          <animate attributeName="r" values="2;3;2" dur="1.2s" repeatCount="indefinite"/>
+        </circle>
+        <rect x="36" y="47" width="8" height="3" rx="1.5" fill="#fff"/>
+      </svg>
+    </div>
+    <h2>Meet ZAIS.ai</h2>
+    <p>
+      ZAIS.ai is your smart AI-powered assistant, ready to help you with creative tasks, editing tips, and instant answers. Experience the future of digital assistance with an ZAIS.ai Which is created by Zotactyson.
+    </p>
+    <a href="BOT.html" class="zais-ai-btn">
+      <i class="fas fa-robot"></i> Open ZAIS.ai 
+    </a>
+  </div>
+</div>
+
+  
+
+  <!-- Cards Section -->
+  <section class="cards-section">
+    <h2>Our Services & Features</h2>
+    <div class="cards-container">
+      <div class="card">
+        <h3>SMM Panels</h3>
+        <p>Access some trusted SMM panels </p>
+        <a href="page1.html"><button>Explore</button></a>
+      </div>
+      <div class="card">
+        <h3>Free Followers</h3>
+        <p>Zotactyson provide you 59 site to add free follower on instagram </p>
+        <a href="page2.html"><button>Try Tools</button></a>
+      </div>
+      <div class="card">
+        <h3>Get Virtual Number</h3>
+        <p>You can get a free virtual number from the following sites</p>
+        <a href="page3.html"><button>Open Panel</button></a>
+      </div>
+      <div class="card">
+        <h3>Community</h3>
+        <p>Join our creative family, share ideas, and learn from other editors.</p>
+        <a href="page4.html"><button>Join Now</button></a>
+      </div>
+      <div class="card">
+        <h3>Tutorials</h3>
+        <p>Step-by-step guides and learning paths to master editing faster.</p>
+        <a href="page5.html"><button>Start Learning</button></a>
+      </div>
+      <div class="card">
+        <h3>Support</h3>
+        <p>Get help anytime from our dedicated team for smooth workflows.</p>
+        <a href="page6.html"><button>Contact Support</button></a>
+      </div>
+    </div>
+  </section>
+
+
+</body>
+</html>
